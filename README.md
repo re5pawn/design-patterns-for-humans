@@ -33,8 +33,6 @@ Wikipedia describes them as
 - Do not try to force them; bad things are supposed to happen, if done so. Keep in mind that design patterns are solutions **to** problems, not solutions **finding** problems; so don't overthink.
 - If used in a correct place in a correct manner, they can prove to be a savior; or else they can result in a horrible mess of a code.
 
-> Also note that the code samples below are in PHP-7, however this shouldn't stop you because the concepts are same anyways. Plus the **support for other languages is underway**.
-
 Types of Design Patterns
 -----------------
 
@@ -72,50 +70,42 @@ Wikipedia says
 **Programmatic Example**
 
 First of all we have a door interface and the implementation
-```php
-interface Door
-{
-    public function getWidth(): float;
-    public function getHeight(): float;
-}
+```js
+/*
+  interface Door {
+    public getWidth(): number;
+    public getHeight(): number;
+  }
+*/
 
-class WoodenDoor implements Door
-{
-    protected $width;
-    protected $height;
+class WoodenDoor {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+  }
 
-    public function __construct(float $width, float $height)
-    {
-        $this->width = $width;
-        $this->height = $height;
-    }
+  getWidth() {
+    return this.width;
+  }
 
-    public function getWidth(): float
-    {
-        return $this->width;
-    }
-
-    public function getHeight(): float
-    {
-        return $this->height;
-    }
+  getHeight() {
+    return this.height;
+  }
 }
 ```
 Then we have our door factory that makes the door and returns it
-```php
-class DoorFactory
-{
-    public static function makeDoor($width, $height): Door
-    {
-        return new WoodenDoor($width, $height);
-    }
+```js
+class DoorFactory {
+  static makeDoor(width, height) {
+    return new WoodenDoor(width, height);
+  }
 }
 ```
 And then it can be used as
-```php
-$door = DoorFactory::makeDoor(100, 200);
-echo 'Width: ' . $door->getWidth();
-echo 'Height: ' . $door->getHeight();
+```js
+const door = DoorFactory.makeDoor(100, 200);
+door.getWidth(); // 100
+door.getHeight(); // 200
 ```
 
 **When to Use?**
@@ -138,72 +128,60 @@ Wikipedia says
 
 Taking our hiring manager example above. First of all we have an interviewer interface and some implementations for it
 
-```php
-interface Interviewer
-{
-    public function askQuestions();
+```js
+/*
+  interface Interviewer {
+    public askQuestions();
+  }
+*/
+
+class Developer {
+  askQuestions() {
+    console.log('Asking about design patterns!');
+  }
 }
 
-class Developer implements Interviewer
-{
-    public function askQuestions()
-    {
-        echo 'Asking about design patterns!';
-    }
-}
-
-class CommunityExecutive implements Interviewer
-{
-    public function askQuestions()
-    {
-        echo 'Asking about community building';
-    }
+class CommunityExecutive {
+  askQuestions() {
+    console.log('Asking about community building');
+  }
 }
 ```
 
 Now let us create our `HiringManager`
 
-```php
-abstract class HiringManager
-{
-
-    // Factory method
-    abstract public function makeInterviewer(): Interviewer;
-
-    public function takeInterview()
-    {
-        $interviewer = $this->makeInterviewer();
-        $interviewer->askQuestions();
-    }
+```js
+// abstract class
+class HiringManager {
+  takeInterview() {
+    // makeInterviewer is a Factory method
+    const interviewer = this.makeInterviewer();
+    interviewer.askQuestions();
+  }
 }
-
 ```
 Now any child can extend it and provide the required interviewer
-```php
-class DevelopmentManager extends HiringManager
-{
-    public function makeInterviewer(): Interviewer
-    {
-        return new Developer();
-    }
+```js
+class DevelopmentManager extends HiringManager {
+  makeInterviewer() {
+    return new Developer();
+  }
 }
 
-class MarketingManager extends HiringManager
-{
-    public function makeInterviewer(): Interviewer
-    {
-        return new CommunityExecutive();
-    }
+class MarketingManager extends HiringManager {
+  makeInterviewer() {
+    return new CommunityExecutive();
+  }
 }
 ```
 and then it can be used as
 
-```php
-$devManager = new DevelopmentManager();
-$devManager->takeInterview(); // Output: Asking about design patterns
+```js
+const devManager = new DevelopmentManager();
+devManager.takeInterview(); // Asking about design patterns!
 
-$marketingManager = new MarketingManager();
-$marketingManager->takeInterview(); // Output: Asking about community building.
+const marketingManager = new MarketingManager();
+marketingManager.takeInterview(); // Asking about community building
 ```
 
 **When to use?**
